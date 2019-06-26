@@ -34,6 +34,8 @@ ghc-options:
 
 library:
   source-dirs: src
+  dependencies:
+  - github
 
 executables:
   explorer-exe:

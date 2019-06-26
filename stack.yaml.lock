@@ -3,7 +3,35 @@
 # For more information, please see the documentation at:
 #   https://docs.haskellstack.org/en/stable/lock_files
 
-packages: []
+packages:
+- completed:
+    hackage: github-0.22@sha256:13f09e904248a40dd173c08f2859d0dfda178a7c27f88df20b70a0d5a7614757,6909
+    pantry-tree:
+      size: 7050
+      sha256: f290767f547b77ae323da3fb92a662c8a9e5fed1c23f626937e79ae983b84af0
+  original:
+    hackage: github-0.22@sha256:13f09e904248a40dd173c08f2859d0dfda178a7c27f88df20b70a0d5a7614757,6909
+- completed:
+    hackage: binary-instances-1@sha256:e7768b92f34bc40cc5cabecc5c143dee6ab4bcb5eb441d58e15a0b000d64940b,2591
+    pantry-tree:
+      size: 1035
+      sha256: e0425d75675a23270bdf570faee30edb28d3f19ba45e166b4ce1725a7b778043
+  original:
+    hackage: binary-instances-1@sha256:e7768b92f34bc40cc5cabecc5c143dee6ab4bcb5eb441d58e15a0b000d64940b,2591
+- completed:
+    hackage: binary-orphans-1.0.1@sha256:74d9a8e2c8c4dc8e11c9028ef103b930fc62f3943e45b1629f39114f2bfb5abb,1987
+    pantry-tree:
+      size: 285
+      sha256: e18cc1489df82d71535e1a15218142ad74199c11c91a5cac7dadf9ddb362fdc2
+  original:
+    hackage: binary-orphans-1.0.1@sha256:74d9a8e2c8c4dc8e11c9028ef103b930fc62f3943e45b1629f39114f2bfb5abb,1987
+- completed:
+    hackage: time-compat-1.9.2.2@sha256:9998dc1b77b5067572ab708e94750f1061152f342e92ad1aba38aae63581174d,4209
+    pantry-tree:
+      size: 3602
+      sha256: 724a63e80871bc6709a2d3ca1c3c7316048e99c9d50b0492f0eff25ce2cecbe0
+  original:
+    hackage: time-compat-1.9.2.2@sha256:9998dc1b77b5067572ab708e94750f1061152f342e92ad1aba38aae63581174d,4209
 snapshots:
 - completed:
     size: 499889

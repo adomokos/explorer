@@ -5,8 +5,8 @@ import RIO
 import RIO.Process
 
 -- | Command line arguments
-data Options = Options
-  { optionsVerbose :: !Bool
+newtype Options = Options
+  { optionsVerbose :: Bool
   }
 
 data App = App

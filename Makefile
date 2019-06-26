@@ -11,7 +11,7 @@ test: ## Run the tests
 .PHONY: test
 
 repl: ## Run a REPL for development
-	stack ghci :$(current_dir)-exe
+	stack ghci :$(current_dir)-exe $(current_dir):lib
 .PHONY: repl
 
 repl-test: ## Run a REPL with tests
@@ -19,6 +19,7 @@ repl-test: ## Run a REPL with tests
 .PHONY: repl-test
 
 run: ## Run app locally
+	# stack exec -- $(current_dir)-exe --help # optionally user flags as command line arguments
 	stack exec -- $(current_dir)-exe
 .PHONY: run
 
