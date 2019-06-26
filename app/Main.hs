@@ -3,10 +3,10 @@
 module Main (main) where
 
 import Import
-import Run
-import RIO.Process
 import Options.Applicative.Simple
 import qualified Paths_explorer
+import RIO.Process
+import Run
 
 main :: IO ()
 main = do
