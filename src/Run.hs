@@ -5,7 +5,6 @@ module Run
   )
 where
 
-import Data.List (intercalate)
 import qualified Data.Vector as DV
 import qualified GitHub as GH
 import qualified GitHub.Endpoints.Users.PublicSSHKeys as PK
@@ -14,22 +13,19 @@ import Import
 run :: RIO App ()
 run = do
   logInfo "We're inside the application!"
-  fetchUser "adomokos"
-  fetchPublicSSHKey "adomokos"
+  logInfo =<< showEither <$> fetchUser "adomokos"
+  logInfo =<< showEither <$> fetchPublicSSHKey "adomokos"
 
-fetchPublicSSHKey :: GH.Name GH.Owner -> RIO App ()
-fetchPublicSSHKey username = do
-  ePublicSSHKeys <- liftIO $ PK.publicSSHKeysFor' username
-  case ePublicSSHKeys of
-    (Left  err          ) -> logInfo $ "Error: " <> displayShow err
-    (Right publicSSHKeys) -> logInfo . displayShow $ intercalate "\n" $ map
-      show
-      (DV.toList publicSSHKeys)
+fetchPublicSSHKey
+  :: (MonadIO m)
+  => GH.Name GH.Owner
+  -> m (Either GH.Error (DV.Vector GH.PublicSSHKeyBasic))
+fetchPublicSSHKey = liftIO . PK.publicSSHKeysFor'
 
-fetchUser :: GH.Name GH.User -> RIO App ()
-fetchUser username = do
-  eUser <- liftIO . GH.executeRequest' $ GH.userInfoForR username
+fetchUser :: (MonadIO m) => GH.Name GH.User -> m (Either GH.Error GH.User)
+fetchUser = liftIO . GH.executeRequest' . GH.userInfoForR
 
-  case eUser of
-    Left  err  -> logInfo $ "Error: " <> displayShow err
-    Right user -> logInfo . displayShow $ user
+showEither :: (Show a, Show b) => Either a b -> Utf8Builder
+showEither eValue = case eValue of
+  Left  err   -> "Error: " <> displayShow err
+  Right value -> displayShow value

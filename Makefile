@@ -20,7 +20,7 @@ repl-test: ## Run a REPL with tests
 
 run: ## Run app locally
 	# stack exec -- $(current_dir)-exe --help # optionally user flags as command line arguments
-	stack exec -- $(current_dir)-exe
+	stack exec -- $(current_dir)-exe -v
 .PHONY: run
 
 help: ## Display this message
