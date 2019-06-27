@@ -37,6 +37,7 @@ library:
   dependencies:
   - github
   - vector
+  - async
 
 executables:
   explorer-exe:
