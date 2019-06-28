@@ -1,7 +1,6 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 module Types where
 
-import qualified Database.Persist.Sqlite as DB
 import RIO
 import RIO.Process
 

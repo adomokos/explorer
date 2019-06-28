@@ -2,7 +2,8 @@ CREATE TABLE people (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   username varchar(255) NOT NULL UNIQUE,
   firstname varchar(255),
-  lastname varchar(255)
+  lastname varchar(255),
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE github_info (
@@ -10,5 +11,6 @@ CREATE TABLE github_info (
   people_id INTEGER NOT NULL,
   login varchar(255) NOT NULL UNIQUE,
   name varchar(255) NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (people_id) REFERENCES people(id)
 );

@@ -42,6 +42,7 @@ library:
   - persistent-sqlite
   - persistent-template
   - text
+  - time
   - resource-pool
   - monad-logger
 

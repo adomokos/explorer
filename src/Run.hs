@@ -9,7 +9,7 @@ module Run
 import qualified Control.Monad.Logger as ML
 import qualified Data.Text as T
 import qualified Database.Persist.Sqlite as DB
-import qualified Entities as E
+import Entities
 import qualified GitHubProxy as GP
 import Import
 
@@ -33,15 +33,16 @@ showEither eValue = case eValue of
 
 run :: RIO App ()
 run = do
-  peopleCount <- liftIO $ runAction countPeople
+  peopleCount <- liftIO $ runDB countPeople
+
   logInfo $ displayShow peopleCount
   logInfo "Hello"
 
 countPeople :: (MonadIO m) => DB.SqlPersistT m Int
-countPeople = DB.count ([] :: [DB.Filter E.Person])
+countPeople = DB.count ([] :: [DB.Filter Person])
 
-runAction :: (MonadUnliftIO m) => ReaderT DB.SqlBackend (ML.LoggingT m) b -> m b
-runAction action =
+runDB :: (MonadUnliftIO m) => ReaderT DB.SqlBackend (ML.LoggingT m) b -> m b
+runDB action =
   ML.runStdoutLoggingT $ DB.withSqliteConn connString $ \backend ->
     runReaderT action backend
 
