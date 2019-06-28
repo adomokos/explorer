@@ -38,6 +38,12 @@ library:
   - github
   - vector
   - async
+  - persistent
+  - persistent-sqlite
+  - persistent-template
+  - text
+  - resource-pool
+  - monad-logger
 
 executables:
   explorer-exe:

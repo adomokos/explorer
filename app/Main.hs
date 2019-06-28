@@ -21,8 +21,10 @@ main = do
                   )
     )
     empty
+
   lo <- logOptionsHandle stderr (optionsVerbose options)
   pc <- mkDefaultProcessContext
+
   withLogFunc lo $ \lf ->
     let app = App
           { appLogFunc = lf
@@ -30,3 +32,4 @@ main = do
           , appOptions = options
           }
      in runRIO app run
+
