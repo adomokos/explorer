@@ -3,3 +3,4 @@
 *.swp
 tarballs/
 .stack-work/
+db/explorer-db.sqlt
