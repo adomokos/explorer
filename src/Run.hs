@@ -9,11 +9,11 @@ module Run
 
 import qualified Control.Monad.Logger as ML
 import qualified Data.Pool as DP
-import qualified Data.Text as T
 import qualified Database.Persist.Sqlite as DB
 import Entities
 import qualified GitHubProxy as GP
 import Import
+import qualified RIO.Text as T
 
 run' :: RIO App ()
 run' = do
