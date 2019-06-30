@@ -2,6 +2,7 @@
 {-# LANGUAGE TemplateHaskell #-}
 module Main (main) where
 
+import qualified DB
 import Import
 import Options.Applicative.Simple
 import qualified Paths_explorer
@@ -26,7 +27,7 @@ main = do
   pc <- mkDefaultProcessContext
 
   withLogFunc lo $ \lf -> do
-    dbPool <- createDbPool
+    dbPool <- DB.createDbPool
     let app = App
           { appLogFunc = lf
           , appProcessContext = pc

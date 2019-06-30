@@ -1,18 +1,14 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE OverloadedStrings #-}
 module Run
   -- ( run
   -- )
            where
 
-import qualified Control.Monad.Logger as ML
-import qualified Data.Pool as DP
-import qualified Database.Persist.Sqlite as DB
-import Entities
-import qualified GitHubProxy as GP
 import Import
-import qualified RIO.Text as T
+
+import qualified DB
+import qualified GitHubProxy as GP
 
 run' :: RIO App ()
 run' = do
@@ -36,24 +32,6 @@ run :: RIO App ()
 run = do
   logInfo "Hello"
 
-  pplCount <- runDb countPeople
+  pplCount <- DB.runDb DB.countPeople
 
   logInfo $ "Number of ppl: " <> displayShow pplCount
-
-countPeople :: (MonadIO m) => DB.SqlPersistT m Int
-countPeople = DB.count ([] :: [DB.Filter Person])
-
-connString :: T.Text
-connString = "db/explorer-db.sqlt"
-
-runDb :: (HasConnPool env) => DB.SqlPersistT (RIO env) b -> RIO env b
-  -- :: (MonadReader s m, HasConnPool s, MonadUnliftIO m)
-  -- => DB.SqlPersistT m b
-  -- -> m b
-runDb query = do
-  env <- ask
-  let connPool = view connPoolL env
-  DB.runSqlPool query connPool
-
-createDbPool :: (MonadUnliftIO m) => m (DP.Pool DB.SqlBackend)
-createDbPool = ML.runStdoutLoggingT $ DB.createSqlitePool connString 4
