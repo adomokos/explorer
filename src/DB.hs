@@ -1,3 +1,4 @@
+{-# LANGUAGE FlexibleContexts #-}
 module DB where
 
 import Import
@@ -15,13 +16,9 @@ countPeople = count ([] :: [Filter Person])
 connString :: T.Text
 connString = "db/explorer-db.sqlt"
 
--- :: (MonadReader s m, HasConnPool s, MonadUnliftIO m)
--- => DB.SqlPersistT m b
--- -> m b
-runDb :: (HasConnPool env) => SqlPersistT (RIO env) b -> RIO env b
+runDb :: SqlPersistT (RIO App) m -> RIO App m
 runDb query = do
-  env <- ask
-  let connPool = view connPoolL env
+  connPool <- view $ to appConnPool
   runSqlPool query connPool
 
 createDbPool :: (MonadUnliftIO m) => m (Pool SqlBackend)
