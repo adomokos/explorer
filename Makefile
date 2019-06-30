@@ -12,7 +12,7 @@ db.console: ## Open the db-console
 .PHONY: db-console
 
 build: ## Build with Stack
-	stack build
+	stack build --fast
 .PHONY: build
 
 test: ## Run the tests
@@ -28,7 +28,7 @@ repl-test: ## Run a REPL with tests
 	stack ghci :$(current_dir)-test
 .PHONY: repl-test
 
-run: ## Run app locally
+run: build ## Run app locally
 	# stack exec -- $(current_dir)-exe --help # optionally user flags as command line arguments
 	stack exec -- $(current_dir)-exe -v
 .PHONY: run
