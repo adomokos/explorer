@@ -1,7 +1,6 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TypeFamilies #-}
 module Run
   -- ( run
   -- )
@@ -47,11 +46,14 @@ countPeople = DB.count ([] :: [DB.Filter Person])
 connString :: T.Text
 connString = "db/explorer-db.sqlt"
 
-runDb
-  :: (MonadReader App m, MonadUnliftIO m) => ReaderT DB.SqlBackend m b -> m b
+runDb :: (HasConnPool env) => DB.SqlPersistT (RIO env) b -> RIO env b
+  -- :: (MonadReader s m, HasConnPool s, MonadUnliftIO m)
+  -- => DB.SqlPersistT m b
+  -- -> m b
 runDb query = do
   env <- ask
-  DB.runSqlPool query (connPool env)
+  let connPool = view connPoolL env
+  DB.runSqlPool query connPool
 
 createDbPool :: (MonadUnliftIO m) => m (DP.Pool DB.SqlBackend)
 createDbPool = ML.runStdoutLoggingT $ DB.createSqlitePool connString 4

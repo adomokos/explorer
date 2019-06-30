@@ -31,7 +31,6 @@ main = do
           { appLogFunc = lf
           , appProcessContext = pc
           , appOptions = options
-          , connPool = dbPool
+          , appConnPool = dbPool
           }
      in runRIO app run
-

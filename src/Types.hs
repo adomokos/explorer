@@ -15,10 +15,16 @@ data App = App
   , appProcessContext :: !ProcessContext
   , appOptions :: !Options
   -- Add other app-specific configuration information here
-  , connPool :: !DB.ConnectionPool
+  , appConnPool :: !DB.ConnectionPool
   }
 
 instance HasLogFunc App where
   logFuncL = lens appLogFunc (\x y -> x { appLogFunc = y })
 instance HasProcessContext App where
   processContextL = lens appProcessContext (\x y -> x { appProcessContext = y })
+
+class HasConnPool env where
+  connPoolL :: Lens' env DB.ConnectionPool
+
+instance HasConnPool App where
+  connPoolL = lens appConnPool (\x y -> x { appConnPool = y })
