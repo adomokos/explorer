@@ -10,7 +10,6 @@ module Run
 import qualified Control.Monad.Logger as ML
 import qualified Data.Pool as DP
 import qualified Data.Text as T
--- import qualified Database.Persist.Sql (runSqlPool)
 import qualified Database.Persist.Sqlite as DB
 import Entities
 import qualified GitHubProxy as GP
@@ -38,7 +37,7 @@ run :: RIO App ()
 run = do
   logInfo "Hello"
 
-  pplCount <- liftIO $ runDb countPeople
+  pplCount <- runDb countPeople
 
   logInfo $ "Number of ppl: " <> displayShow pplCount
 
@@ -48,10 +47,11 @@ countPeople = DB.count ([] :: [DB.Filter Person])
 connString :: T.Text
 connString = "db/explorer-db.sqlt"
 
-runDb :: (MonadUnliftIO m) => ReaderT DB.SqlBackend m b -> m b
+runDb
+  :: (MonadReader App m, MonadUnliftIO m) => ReaderT DB.SqlBackend m b -> m b
 runDb query = do
-  pool <- createDbPool
-  DB.runSqlPool query pool
+  env <- ask
+  DB.runSqlPool query (connPool env)
 
 createDbPool :: (MonadUnliftIO m) => m (DP.Pool DB.SqlBackend)
 createDbPool = ML.runStdoutLoggingT $ DB.createSqlitePool connString 4

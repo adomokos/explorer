@@ -25,11 +25,13 @@ main = do
   lo <- logOptionsHandle stderr (optionsVerbose options)
   pc <- mkDefaultProcessContext
 
-  withLogFunc lo $ \lf ->
+  withLogFunc lo $ \lf -> do
+    dbPool <- createDbPool
     let app = App
           { appLogFunc = lf
           , appProcessContext = pc
           , appOptions = options
+          , connPool = dbPool
           }
      in runRIO app run
 

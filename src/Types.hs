@@ -1,6 +1,7 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 module Types where
 
+import qualified Database.Persist.Sqlite as DB
 import RIO
 import RIO.Process
 
@@ -14,7 +15,7 @@ data App = App
   , appProcessContext :: !ProcessContext
   , appOptions :: !Options
   -- Add other app-specific configuration information here
-  -- , connPool :: !DB.ConnectionPool
+  , connPool :: !DB.ConnectionPool
   }
 
 instance HasLogFunc App where
