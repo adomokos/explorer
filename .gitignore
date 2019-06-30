@@ -4,3 +4,5 @@
 tarballs/
 .stack-work/
 db/explorer-db.sqlt
+db/explorer-db.sqlt-shm
+db/explorer-db.sqlt-wal
