@@ -1,3 +1,4 @@
+{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeFamilies #-}
@@ -7,7 +8,9 @@ module Run
            where
 
 import qualified Control.Monad.Logger as ML
+import qualified Data.Pool as DP
 import qualified Data.Text as T
+-- import qualified Database.Persist.Sql (runSqlPool)
 import qualified Database.Persist.Sqlite as DB
 import Entities
 import qualified GitHubProxy as GP
@@ -33,21 +36,22 @@ showEither eValue = case eValue of
 
 run :: RIO App ()
 run = do
-  peopleCount <- liftIO $ runDB countPeople
-
-  logInfo $ displayShow peopleCount
   logInfo "Hello"
+
+  pplCount <- liftIO $ runDb countPeople
+
+  logInfo $ "Number of ppl: " <> displayShow pplCount
 
 countPeople :: (MonadIO m) => DB.SqlPersistT m Int
 countPeople = DB.count ([] :: [DB.Filter Person])
 
-runDB :: (MonadUnliftIO m) => ReaderT DB.SqlBackend (ML.LoggingT m) b -> m b
-runDB action =
-  ML.runStdoutLoggingT $ DB.withSqliteConn connString $ \backend ->
-    runReaderT action backend
-
--- runAction' action = DB.runSqlite connString action
-
 connString :: T.Text
 connString = "db/explorer-db.sqlt"
 
+runDb :: (MonadUnliftIO m) => ReaderT DB.SqlBackend m b -> m b
+runDb query = do
+  pool <- createDbPool
+  DB.runSqlPool query pool
+
+createDbPool :: (MonadUnliftIO m) => m (DP.Pool DB.SqlBackend)
+createDbPool = ML.runStdoutLoggingT $ DB.createSqlitePool connString 4
