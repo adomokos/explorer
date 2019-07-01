@@ -10,6 +10,15 @@ import Database.Persist.Sqlite
 import Entities
 import qualified RIO.Text as T
 
+-- | Run functions from this module
+run :: RIO App ()
+run = do
+  logInfo "Hello"
+
+  pplCount <- DB.runDb DB.countPeople
+
+  logInfo $ "Number of ppl: " <> displayShow pplCount
+
 countPeople :: (MonadIO m) => SqlPersistT m Int
 countPeople = count ([] :: [Filter Person])
 
