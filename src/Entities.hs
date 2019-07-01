@@ -25,7 +25,7 @@ GitHubInfo sql=github_info
   person PersonId sql=people_id
   login String
   name String
-  joinedAt DT.UTCTime
+  accountCreatedAt DT.UTCTime
   UniqueGitHubInfo login
   deriving Show
   deriving Eq
