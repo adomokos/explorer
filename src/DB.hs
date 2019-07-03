@@ -8,7 +8,9 @@ import Data.Pool (Pool)
 import qualified Data.Time as DT
 import Database.Persist.Sqlite
 import Entities
+import RIO.Partial (fromJust)
 import qualified RIO.Text as T
+import System.Environment (lookupEnv)
 
 -- | Run functions from this module
 run :: RIO App ()
@@ -38,8 +40,8 @@ createGitHubInfo personId =
     (DT.fromGregorian 2009 11 2)
     (12 * 60 * 60 + 34 * 60 + 56)
 
-connString :: T.Text
-connString = "db/explorer-db.sqlt"
+connString :: IO T.Text
+connString = T.pack . fromJust <$> lookupEnv "DB_FILE_PATH"
 
 runDb :: SqlPersistT (RIO App) m -> RIO App m
 runDb query = do
@@ -47,4 +49,6 @@ runDb query = do
   runSqlPool query connPool
 
 createDbPool :: (MonadUnliftIO m) => m (Pool SqlBackend)
-createDbPool = runStdoutLoggingT $ createSqlitePool connString 4
+createDbPool = do
+  dbConnString <- liftIO connString
+  runStdoutLoggingT $ createSqlitePool dbConnString 4

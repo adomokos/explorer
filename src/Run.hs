@@ -13,5 +13,5 @@ import qualified GitHubProxy as GP
 run :: RIO App ()
 run = do
   logInfo "Hello"
-  -- GP.run
+  GP.run
   DB.run

@@ -37,16 +37,16 @@ ghc-options:
 library:
   source-dirs: src
   dependencies:
-  - github
-  - vector
   - async
+  - github
+  - monad-logger
   - persistent
   - persistent-sqlite
   - persistent-template
+  - resource-pool
   - text
   - time
-  - resource-pool
-  - monad-logger
+  - vector
 
 executables:
   explorer-exe:
@@ -55,6 +55,7 @@ executables:
     dependencies:
     - explorer
     - optparse-simple
+    - load-env
 
     ghc-options:
     - -threaded

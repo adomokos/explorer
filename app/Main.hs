@@ -4,6 +4,7 @@ module Main (main) where
 
 import qualified DB
 import Import
+import LoadEnv (loadEnv)
 import Options.Applicative.Simple
 import qualified Paths_explorer
 import RIO.Process
@@ -25,6 +26,8 @@ main = do
 
   lo <- logOptionsHandle stderr (optionsVerbose options)
   pc <- mkDefaultProcessContext
+
+  loadEnv
 
   withLogFunc lo $ \lf -> do
     dbPool <- DB.createDbPool
