@@ -12,18 +12,18 @@ import Util (showEither)
 -- | Run functions from this module
 run :: RIO App ()
 run = do
-  (user, sshKeys, repo) <- runAsync (fetchUser "adomokos")
-                                    (fetchPublicSSHKeys "adomokos")
-                                    (fetchRepo "adomokos" "light-service")
-                                    (fetchRepos "adomokos")
+  (user, sshKeys, repo) <- fetchData (fetchUser "adomokos")
+                                     (fetchPublicSSHKeys "adomokos")
+                                     (fetchRepo "adomokos" "light-service")
+                                     (fetchRepos "adomokos")
 
   logInfo $ showEither user
   logInfo $ showEither sshKeys
   logInfo $ showEither repo
   -- logInfo $ showEither repos
 
-runAsync :: MonadUnliftIO m => m a -> m b -> m c -> m d -> m (a, b, c)
-runAsync action1 action2 action3 action4 = do
+fetchData :: MonadUnliftIO m => m a -> m b -> m c -> m d -> m (a, b, c)
+fetchData action1 action2 action3 action4 = do
   a1      <- async action1
   a2      <- async action2
   a3      <- async action3
