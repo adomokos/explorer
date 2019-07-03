@@ -14,10 +14,10 @@ import Database.Persist.TH
 
 share [mkPersist sqlSettings] [persistLowerCase|
 Person sql=people
-  username String
+  email String
   firstname String
   lastname String
-  UniquePerson username
+  UniquePerson email
   deriving Show
   deriving Eq
 

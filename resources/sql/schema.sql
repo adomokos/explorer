@@ -1,6 +1,6 @@
 CREATE TABLE people (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  username varchar(255) NOT NULL UNIQUE,
+  email varchar(255) NOT NULL UNIQUE,
   firstname varchar(255),
   lastname varchar(255),
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP

@@ -9,9 +9,8 @@ import Import
 
 import qualified DB
 import qualified GitHubProxy as GP
+import Util (showEither)
 
 run :: RIO App ()
-run = do
-  logInfo "Hello"
-  GP.run
+run =
   DB.run

@@ -17,9 +17,8 @@ run :: RIO App ()
 run = do
   personId <- DB.runDb $ do
     deleteWhere ([] :: [Filter GitHubInfo])
-    deleteWhere ([] :: [Filter Person])
+    Entity personId _ <- getJustEntity (PersonKey 1)
 
-    personId <- createPerson
     createGitHubInfo personId
     pure personId
 

@@ -12,28 +12,37 @@ import Util (showEither)
 -- | Run functions from this module
 run :: RIO App ()
 run = do
-  (user, sshKeys, repo) <- fetchData (fetchUser "adomokos")
-                                     (fetchPublicSSHKeys "adomokos")
-                                     (fetchRepo "adomokos" "light-service")
-                                     (fetchRepos "adomokos")
+  (user, sshKeys, repos) <- fetch3Data (fetchUser "adomokos")
+                                       (fetchPublicSSHKeys "adomokos")
+                                       -- (fetchRepo "adomokos" "light-service")
+                                       (fetchRepos "adomokos")
 
   logInfo $ showEither user
   logInfo $ showEither sshKeys
-  logInfo $ showEither repo
-  -- logInfo $ showEither repos
+  -- logInfo $ showEither repo
+  logInfo $ showEither repos
 
-fetchData :: MonadUnliftIO m => m a -> m b -> m c -> m d -> m (a, b, c)
-fetchData action1 action2 action3 action4 = do
+fetch2Data :: MonadUnliftIO m => m a -> m b -> m (a, b)
+fetch2Data action1 action2 = do
+  a1      <- async action1
+  a2      <- async action2
+  result1 <- wait a1
+  result2 <- wait a2
+
+  pure (result1, result2)
+
+fetch3Data :: MonadUnliftIO m => m a -> m b -> m c -> m (a, b, c)
+fetch3Data action1 action2 action3 = do
   a1      <- async action1
   a2      <- async action2
   a3      <- async action3
-  a4      <- async action4
-  user    <- wait a1
-  sshKeys <- wait a2
-  repo    <- wait a3
-  _repos  <- wait a4
+  -- a4      <- async action4
+  result1 <- wait a1
+  result2 <- wait a2
+  result3 <- wait a3
+  -- repos   <- wait a4
 
-  pure (user, sshKeys, repo)
+  pure (result1, result2, result3)
 
 fetchPublicSSHKeys
   :: (MonadIO m)
