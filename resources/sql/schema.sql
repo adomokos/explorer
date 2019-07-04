@@ -3,6 +3,7 @@ CREATE TABLE people (
   email varchar(255) NOT NULL UNIQUE,
   firstname varchar(255),
   lastname varchar(255),
+  github_username varchar(255),
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 

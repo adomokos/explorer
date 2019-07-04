@@ -17,6 +17,7 @@ Person sql=people
   email String
   firstname String
   lastname String
+  githubUsername String
   UniquePerson email
   deriving Show
   deriving Eq

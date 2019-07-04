@@ -31,13 +31,15 @@ countPeople :: (MonadIO m) => SqlPersistT m Int
 countPeople = count ([] :: [Filter Person])
 
 createPerson :: (MonadIO m) => SqlPersistT m PersonId
-createPerson = insert $ Person "jsmith" "John" "Smith"
+createPerson = insert $ Person "jsmith" "John" "Smith" "adomokos"
 
 createGitHubInfo :: (MonadIO m) => PersonId -> SqlPersistT m ()
 createGitHubInfo personId =
-  insert_ $ GitHubInfo personId "jsmith" "John Smith" $ DT.UTCTime
-    (DT.fromGregorian 2009 11 2)
-    (12 * 60 * 60 + 34 * 60 + 56)
+  insert_ $ GitHubInfo personId "jsmith" "John Smith" dummyDate
+
+dummyDate :: DT.UTCTime
+dummyDate =
+  DT.UTCTime (DT.fromGregorian 2009 11 2) (12 * 60 * 60 + 34 * 60 + 56)
 
 connString :: IO T.Text
 connString = T.pack . fromJust <$> lookupEnv "DB_FILE_PATH"
