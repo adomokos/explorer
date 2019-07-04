@@ -7,37 +7,44 @@ module Run
 
 import Import
 
+import Data.Maybe (fromJust)
+import qualified Database.Persist.Sqlite as DP
 import qualified DB
+import Entities
 import GitHub (OwnerType(..), URL(..), User(..))
 import qualified GitHub as GH
 import qualified GitHubProxy as GP
-import qualified Database.Persist.Sqlite as DP
-import Util (showEither)
-import Entities
-import Data.Maybe (fromJust)
 import qualified RIO.Text as T
+import Util (showEither)
 
 run :: RIO App ()
 run = do
   (user, _repos) <- GP.fetch2Data (GP.fetchUser "adomokos")
                                   (GP.fetchRepos "adomokos")
 
-  logInfo $ showEither  (Right fetchUser' :: Either String User)
+  logInfo $ showEither user
 
   let -- user = fetchUser'
-      eGitHubInfo = (\x -> GitHubInfo (PersonKey 1)
-                              (show $ userLogin x)
-                              (T.unpack $ fromJust $ userName x)
-                              (userCreatedAt x)) <$> user
+      eGitHubInfo =
+        (\x -> GitHubInfo (PersonKey 1)
+                          (show $ userLogin x)
+                          (T.unpack $ fromJust $ userName x)
+                          (userCreatedAt x)
+          )
+          <$> user
 
       gitHubInfo = either (error "no gitHubInfo") id eGitHubInfo
 
-  DB.runDb $ DP.insert_ gitHubInfo
+  DB.runDb $ do
+    DP.insert_ gitHubInfo
+    pplCount <- DB.countPeople
+
+    lift . logInfo $ "Number of ppl: " <> displayShow pplCount
 
   -- DB.run
 
-fetchUser' :: User
-fetchUser' = User
+fetchUser' :: Either GH.Error User
+fetchUser' = Right $ User
   { userId          = GH.mkId (Proxy :: Proxy User) 80530 -- :: GH.Id User
   , userLogin       = "adomokos"
   , userName        = Just "Attila Domokos"
