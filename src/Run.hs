@@ -17,23 +17,24 @@ import qualified GitHubProxy as GP
 import qualified RIO.Text as T
 import Util (showEither)
 
+data AppError =
+    GitHubFetchDataError
+  | GitHubInfoBuildError
+  deriving (Show)
+
 run :: RIO App ()
 run = do
-  (user, _repos) <- GP.fetch2Data (GP.fetchUser "adomokos")
-                                  (GP.fetchRepos "adomokos")
+  (user, repos) <- GP.fetch2Data (GP.fetchUser "adomokos")
+                                 (GP.fetchRepos "adomokos")
 
   logInfo $ showEither user
 
   let -- user = fetchUser'
-      eGitHubInfo =
-        (\x -> GitHubInfo (PersonKey 1)
-                          (show $ userLogin x)
-                          (T.unpack $ fromJust $ userName x)
-                          (userCreatedAt x)
-          )
-          <$> user
+      eGitHubInfo' = buildGitHubInfo
+        =<< GP.fetch2Data (GP.fetchUser "adomokos") (GP.fetchRepos "adomokos")
 
-      gitHubInfo = either (error "no gitHubInfo") id eGitHubInfo
+      eGitHubInfo = buildGitHubInfo =<< user
+      gitHubInfo  = either (error "no gitHubInfo") id eGitHubInfo
 
   DB.runDb $ do
     DP.insert_ gitHubInfo
@@ -42,6 +43,20 @@ run = do
     lift . logInfo $ "Number of ppl: " <> displayShow pplCount
 
   -- DB.run
+
+buildGitHubInfo' :: (GH.User, Vector GH.Repo) -> Either GH.Error GitHubInfo
+buildGitHubInfo' (user, _repos) = pure $ GitHubInfo
+  (PersonKey 1)
+  (show $ userLogin user)
+  (T.unpack $ fromJust $ userName user)
+  (userCreatedAt user)
+
+buildGitHubInfo :: GH.User -> Either GH.Error GitHubInfo
+buildGitHubInfo user = Right $ GitHubInfo
+  (PersonKey 1)
+  (show $ userLogin user)
+  (T.unpack $ fromJust $ userName user)
+  (userCreatedAt user)
 
 fetchUser' :: Either GH.Error User
 fetchUser' = Right $ User
