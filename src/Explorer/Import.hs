@@ -1,4 +1,3 @@
-{-# LANGUAGE NoImplicitPrelude #-}
 module Explorer.Import
   ( module RIO
   , module Explorer.Types

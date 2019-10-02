@@ -1,4 +1,3 @@
-{-# LANGUAGE NoImplicitPrelude #-}
 module Explorer.GitHubProxy where
 
 import Explorer.Import
