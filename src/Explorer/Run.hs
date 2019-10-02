@@ -1,21 +1,21 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE NoImplicitPrelude #-}
-module Run
+module Explorer.Run
   -- ( run
   -- )
            where
 
-import Import
+import Explorer.Import
 
 import Data.Maybe (fromJust)
 import qualified Database.Persist.Sqlite as DP
-import qualified DB
-import Entities
+import qualified Explorer.DB as DB
+import Explorer.Entities
 import GitHub (OwnerType(..), URL(..), User(..))
 import qualified GitHub as GH
-import qualified GitHubProxy as GP
+import qualified Explorer.GitHubProxy as GP
 import qualified RIO.Text as T
-import Util (showEither)
+import Explorer.Util (showEither)
 
 run :: RIO App ()
 run = do

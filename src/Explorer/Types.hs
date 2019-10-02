@@ -1,5 +1,5 @@
 {-# LANGUAGE NoImplicitPrelude #-}
-module Types where
+module Explorer.Types where
 
 import qualified Database.Persist.Sqlite as DB
 import RIO

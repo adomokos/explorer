@@ -1,8 +1,8 @@
 {-# LANGUAGE NoImplicitPrelude #-}
-module Import
+module Explorer.Import
   ( module RIO
-  , module Types
+  , module Explorer.Types
   ) where
 
 import RIO
-import Types
+import Explorer.Types

@@ -6,7 +6,9 @@
 {-# LANGUAGE QuasiQuotes #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TypeFamilies #-}
-module Entities where
+module Explorer.Entities where
+
+import Explorer.Import
 
 import qualified Data.Time as DT
 import Database.Persist.Sqlite

@@ -2,13 +2,13 @@
 {-# LANGUAGE TemplateHaskell #-}
 module Main (main) where
 
-import qualified DB
-import Import
+import qualified Explorer.DB as DB
+import Explorer.Import
 import LoadEnv (loadEnv)
 import Options.Applicative.Simple
 import qualified Paths_explorer
 import RIO.Process
-import Run
+import Explorer.Run
 
 main :: IO ()
 main = do

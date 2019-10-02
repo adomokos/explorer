@@ -1,13 +1,13 @@
 {-# LANGUAGE FlexibleContexts #-}
-module DB where
+module Explorer.DB where
 
-import Import
+import Explorer.Import
 
 import Control.Monad.Logger (runStdoutLoggingT)
 import Data.Pool (Pool)
 import qualified Data.Time as DT
 import Database.Persist.Sqlite
-import Entities
+import Explorer.Entities
 import RIO.Partial (fromJust)
 import qualified RIO.Text as T
 import System.Environment (lookupEnv)
@@ -15,7 +15,7 @@ import System.Environment (lookupEnv)
 -- | Run functions from this module
 run :: RIO App ()
 run = do
-  personId <- DB.runDb $ do
+  personId <- runDb $ do
     deleteWhere ([] :: [Filter GitHubInfo])
     Entity personId _ <- getJustEntity (PersonKey 1)
 
@@ -24,7 +24,7 @@ run = do
 
   logInfo $ "New person Id: " <> (displayShow . fromSqlKey $ personId)
 
-  pplCount <- DB.runDb DB.countPeople
+  pplCount <- runDb countPeople
   logInfo $ "Number of ppl: " <> displayShow pplCount
 
 countPeople :: (MonadIO m) => SqlPersistT m Int

@@ -1,13 +1,13 @@
 {-# LANGUAGE NoImplicitPrelude #-}
-module GitHubProxy where
+module Explorer.GitHubProxy where
 
-import Import
+import Explorer.Import
 
 import qualified Data.Vector as DV
 import qualified GitHub as GH
 import qualified GitHub.Endpoints.Repos as GH
 import qualified GitHub.Endpoints.Users.PublicSSHKeys as PK
-import Util (showEither)
+import Explorer.Util (showEither)
 
 -- | Run functions from this module
 run :: RIO App ()
