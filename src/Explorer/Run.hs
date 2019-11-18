@@ -1,8 +1,5 @@
-{-# LANGUAGE FlexibleContexts #-}
 module Explorer.Run
-  -- ( run
-  -- )
-           where
+  where
 
 import Explorer.Import
 
@@ -10,35 +7,35 @@ import Data.Maybe (fromJust)
 import qualified Database.Persist.Sqlite as DP
 import qualified Explorer.DB as DB
 import Explorer.Entities
+import qualified Explorer.GitHubProxy as GP
+import Explorer.Util (showEither)
 import GitHub (OwnerType(..), URL(..), User(..))
 import qualified GitHub as GH
-import qualified Explorer.GitHubProxy as GP
 import qualified RIO.Text as T
-import Explorer.Util (showEither)
 
 run :: RIO App ()
 run = do
-  (user, _repos) <- GP.fetch2Data (GP.fetchUser "adomokos")
-                                  (GP.fetchRepos "adomokos")
+  res <- GP.fetchUserAndRepos "adomokos"
 
-  logInfo $ showEither user
 
   let -- user = fetchUser'
       eGitHubInfo =
-        (\x -> GitHubInfo (PersonKey 1)
+        (\(x, _) -> GitHubInfo (PersonKey 1)
                           (show $ userLogin x)
                           (T.unpack $ fromJust $ userName x)
                           (userCreatedAt x)
           )
-          <$> user
+          <$> res
 
       gitHubInfo = either (error "no gitHubInfo") id eGitHubInfo
 
-  DB.runDb $ do
-    DP.insert_ gitHubInfo
-    pplCount <- DB.countPeople
+  logInfo $ displayShow gitHubInfo
 
-    lift . logInfo $ "Number of ppl: " <> displayShow pplCount
+  -- DB.runDb $ do
+    -- DP.insert_ gitHubInfo
+    -- pplCount <- DB.countPeople
+
+    -- lift . logInfo $ "Number of ppl: " <> displayShow pplCount
 
   -- DB.run
 

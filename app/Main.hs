@@ -4,11 +4,11 @@ module Main (main) where
 
 import qualified Explorer.DB as DB
 import Explorer.Import
+import Explorer.Run (run)
 import LoadEnv (loadEnv)
 import Options.Applicative.Simple
 import qualified Paths_explorer
 import RIO.Process
-import Explorer.Run
 
 main :: IO ()
 main = do

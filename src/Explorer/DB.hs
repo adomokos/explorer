@@ -1,4 +1,3 @@
-{-# LANGUAGE FlexibleContexts #-}
 module Explorer.DB where
 
 import Explorer.Import

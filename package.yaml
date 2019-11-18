@@ -23,6 +23,7 @@ dependencies:
 - base >= 4.11 && < 10
 - rio >= 0.1.8.0
 default-extensions:
+- FlexibleContexts
 - OverloadedStrings
 - NoImplicitPrelude
 
