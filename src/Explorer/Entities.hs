@@ -31,6 +31,7 @@ GitHubMetric sql=git_hub_metrics
   publicRepos Int
   followers Int
   following Int
+  mostStargazedRepos Text Maybe
   accountCreatedAt DT.UTCTime
   deriving Show
   deriving Eq

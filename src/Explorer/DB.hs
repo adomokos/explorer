@@ -44,7 +44,7 @@ fetchPersonByGhUsername gitHubUsername =
 
 createGitHubMetric :: (MonadIO m) => PersonId -> SqlPersistT m ()
 createGitHubMetric personId =
-  insert_ $ GitHubMetric personId "jsmith" "John Smith" 34 79 100 9 dummyDate
+  insert_ $ GitHubMetric personId "jsmith" "John Smith" 34 79 100 9 Nothing dummyDate
 
 dummyDate :: DT.UTCTime
 dummyDate =

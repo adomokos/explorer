@@ -16,6 +16,7 @@ CREATE TABLE git_hub_metrics (
   public_repos INTEGER NOT NULL,
   followers INTEGER NOT NULL,
   following INTEGER NOT NULL,
+  most_stargazed_repos TEXT NULL,
   account_created_at DATETIME NOT NULL,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (people_id) REFERENCES people(id)
