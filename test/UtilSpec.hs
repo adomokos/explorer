@@ -1,13 +1,14 @@
-{-# LANGUAGE NoImplicitPrelude #-}
 module UtilSpec (spec) where
 
-import Import
-import Util
+import Explorer.Import
 import Test.Hspec
 import Test.Hspec.QuickCheck
 
+plus2 :: Int -> Int
+plus2 = (+2)
+
 spec :: Spec
-spec = do
+spec =
   describe "plus2" $ do
     it "basic check" $ plus2 0 `shouldBe` 2
     it "overflow" $ plus2 maxBound `shouldBe` minBound + 1
