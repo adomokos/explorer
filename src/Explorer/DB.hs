@@ -36,8 +36,8 @@ fetchPersonByGhUsername
   :: (MonadIO m)
   => Text
   -> SqlPersistT m (Maybe (Entity Person))
-fetchPersonByGhUsername githubUsername =
-  selectFirst [PersonGithubUsername ==. T.unpack githubUsername] []
+fetchPersonByGhUsername gitHubUsername =
+  selectFirst [PersonGitHubUsername ==. T.unpack gitHubUsername] []
 
 createGitHubInfo :: (MonadIO m) => PersonId -> SqlPersistT m ()
 createGitHubInfo personId =

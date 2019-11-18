@@ -18,18 +18,17 @@ Person sql=people
   email String
   firstname String
   lastname String
-  githubUsername String
+  gitHubUsername String
   UniquePerson email
   deriving Show
   deriving Eq
 
-GitHubInfo sql=github_info
+GitHubInfo sql=git_hub_info
   person PersonId sql=people_id
   login String
   name String
   publicReposCount Int
   accountCreatedAt DT.UTCTime
-  UniqueGitHubInfo login
   deriving Show
   deriving Eq
 |]
