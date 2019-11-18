@@ -23,11 +23,14 @@ Person sql=people
   deriving Show
   deriving Eq
 
-GitHubInfo sql=git_hub_info
+GitHubMetric sql=git_hub_metrics
   person PersonId sql=people_id
   login String
   name String
-  publicReposCount Int
+  publicGists Int
+  publicRepos Int
+  followers Int
+  following Int
   accountCreatedAt DT.UTCTime
   deriving Show
   deriving Eq

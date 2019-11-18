@@ -8,7 +8,6 @@ import qualified Database.Persist.Sqlite as DP
 import qualified Explorer.DB as DB
 import Explorer.Entities
 import qualified Explorer.GitHubProxy as GP
-import Explorer.Util (showEither)
 import GitHub (OwnerType(..), URL(..), User(..))
 import qualified GitHub as GH
 import qualified RIO.Text as T
@@ -25,23 +24,23 @@ run = do
   -- We should use our own custom ADT error here
   let (userInfo, _repos) = either (error "no gitHub Info") id res
 
-  let gitHubInfo =
-        GitHubInfo (PersonKey 2)
+  let gitHubMetric =
+        GitHubMetric (PersonKey 1)
                    (show $ userLogin userInfo)
                    (T.unpack $ fromJust $ userName userInfo)
+                   (userPublicGists userInfo)
                    (userPublicRepos userInfo)
+                   (userFollowers userInfo)
+                   (userFollowing userInfo)
                    (userCreatedAt userInfo)
 
+  logInfo $ displayShow gitHubMetric
 
-  logInfo $ displayShow gitHubInfo
+  DB.runDb $ do
+    DP.insert_ gitHubMetric
+    ghMetricCount <- DB.countGHMetrics
 
-  -- DB.runDb $ do
-    -- DP.insert_ gitHubInfo
-    -- pplCount <- DB.countPeople
-
-    -- lift . logInfo $ "Number of ppl: " <> displayShow pplCount
-
-  -- DB.run
+    lift . logInfo $ "Number of ghMetrics: " <> displayShow ghMetricCount
 
 fetchUser' :: Either GH.Error User
 fetchUser' = Right $ User

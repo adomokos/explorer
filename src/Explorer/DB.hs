@@ -15,10 +15,10 @@ import System.Environment (lookupEnv)
 run :: RIO App ()
 run = do
   personId <- runDb $ do
-    deleteWhere ([] :: [Filter GitHubInfo])
+    deleteWhere ([] :: [Filter GitHubMetric])
     Entity personId _ <- getJustEntity (PersonKey 1)
 
-    createGitHubInfo personId
+    createGitHubMetric personId
     pure personId
 
   logInfo $ "New person Id: " <> (displayShow . fromSqlKey $ personId)
@@ -28,6 +28,9 @@ run = do
 
 countPeople :: (MonadIO m) => SqlPersistT m Int
 countPeople = count ([] :: [Filter Person])
+
+countGHMetrics :: (MonadIO m) => SqlPersistT m Int
+countGHMetrics = count ([] :: [Filter GitHubMetric])
 
 createPerson :: (MonadIO m) => SqlPersistT m PersonId
 createPerson = insert $ Person "jsmith" "John" "Smith" "adomokos"
@@ -39,9 +42,9 @@ fetchPersonByGhUsername
 fetchPersonByGhUsername gitHubUsername =
   selectFirst [PersonGitHubUsername ==. T.unpack gitHubUsername] []
 
-createGitHubInfo :: (MonadIO m) => PersonId -> SqlPersistT m ()
-createGitHubInfo personId =
-  insert_ $ GitHubInfo personId "jsmith" "John Smith" 84 dummyDate
+createGitHubMetric :: (MonadIO m) => PersonId -> SqlPersistT m ()
+createGitHubMetric personId =
+  insert_ $ GitHubMetric personId "jsmith" "John Smith" 34 79 100 9 dummyDate
 
 dummyDate :: DT.UTCTime
 dummyDate =
