@@ -43,10 +43,11 @@ fetchRepos username = liftIO $ GH.userRepos username GH.RepoPublicityOwner
 
 fetchUserAndRepos
   :: (MonadUnliftIO m)
-  => GH.Name GH.User
+  => Text
   -> m (Either GH.Error (GH.User, Vector GH.Repo))
 fetchUserAndRepos username = do
+  let githubUsername = GH.mkUserName username
   (u,r) <- fetch2Data
-    (fetchUser username)
-    (fetchRepos $ GH.fromUserName username)
+    (fetchUser githubUsername)
+    (fetchRepos $ GH.fromUserName githubUsername)
   pure $ (,) <$> u <*> r

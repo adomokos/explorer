@@ -15,19 +15,23 @@ import qualified RIO.Text as T
 
 run :: RIO App ()
 run = do
-  res <- GP.fetchUserAndRepos "adomokos"
+  let ghUsername = "adomokos"
 
+  person <- DB.runDb $ DB.fetchPersonByGhUsername ghUsername
+  logInfo $ displayShow person
 
-  let -- user = fetchUser'
-      eGitHubInfo =
-        (\(x, _) -> GitHubInfo (PersonKey 1)
-                          (show $ userLogin x)
-                          (T.unpack $ fromJust $ userName x)
-                          (userCreatedAt x)
-          )
-          <$> res
+  res <- GP.fetchUserAndRepos ghUsername
 
-      gitHubInfo = either (error "no gitHubInfo") id eGitHubInfo
+  -- We should use our own custom ADT error here
+  let (userInfo, _repos) = either (error "no gitHub Info") id res
+
+  let gitHubInfo =
+        GitHubInfo (PersonKey 2)
+                   (show $ userLogin userInfo)
+                   (T.unpack $ fromJust $ userName userInfo)
+                   (userPublicRepos userInfo)
+                   (userCreatedAt userInfo)
+
 
   logInfo $ displayShow gitHubInfo
 

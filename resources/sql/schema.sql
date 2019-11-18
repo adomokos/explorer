@@ -12,6 +12,7 @@ CREATE TABLE github_info (
   people_id INTEGER NOT NULL,
   login varchar(255) NOT NULL UNIQUE,
   name varchar(255) NOT NULL,
+  publicReposCount INTEGER NOT NULL,
   account_created_at DATETIME NOT NULL,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (people_id) REFERENCES people(id)

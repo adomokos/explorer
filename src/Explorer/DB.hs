@@ -32,9 +32,16 @@ countPeople = count ([] :: [Filter Person])
 createPerson :: (MonadIO m) => SqlPersistT m PersonId
 createPerson = insert $ Person "jsmith" "John" "Smith" "adomokos"
 
+fetchPersonByGhUsername
+  :: (MonadIO m)
+  => Text
+  -> SqlPersistT m (Maybe (Entity Person))
+fetchPersonByGhUsername githubUsername =
+  selectFirst [PersonGithubUsername ==. T.unpack githubUsername] []
+
 createGitHubInfo :: (MonadIO m) => PersonId -> SqlPersistT m ()
 createGitHubInfo personId =
-  insert_ $ GitHubInfo personId "jsmith" "John Smith" dummyDate
+  insert_ $ GitHubInfo personId "jsmith" "John Smith" 84 dummyDate
 
 dummyDate :: DT.UTCTime
 dummyDate =
