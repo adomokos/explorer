@@ -16,7 +16,8 @@ run :: RIO App ()
 run = do
   let ghUsername = "adomokos"
 
-  person <- DB.runDb $ DB.fetchPersonByGhUsername ghUsername
+  mPerson <- DB.runDb $ DB.fetchPersonByGhUsername ghUsername
+  let person = fromJust mPerson
   logInfo $ displayShow person
 
   res <- GP.fetchUserAndRepos ghUsername
@@ -25,14 +26,14 @@ run = do
   let (userInfo, _repos) = either (error "no gitHub Info") id res
 
   let gitHubMetric =
-        GitHubMetric (PersonKey 1)
-                   (show $ userLogin userInfo)
-                   (T.unpack $ fromJust $ userName userInfo)
-                   (userPublicGists userInfo)
-                   (userPublicRepos userInfo)
-                   (userFollowers userInfo)
-                   (userFollowing userInfo)
-                   (userCreatedAt userInfo)
+        GitHubMetric (DP.entityKey person)
+                     (show $ userLogin userInfo)
+                     (T.unpack $ fromJust $ userName userInfo)
+                     (userPublicGists userInfo)
+                     (userPublicRepos userInfo)
+                     (userFollowers userInfo)
+                     (userFollowing userInfo)
+                     (userCreatedAt userInfo)
 
   logInfo $ displayShow gitHubMetric
 
