@@ -52,8 +52,8 @@ library:
 
 executables:
   explorer-exe:
-    main:                Main.hs
-    source-dirs:         app
+    main: Main.hs
+    source-dirs: app
     dependencies:
     - explorer
     - optparse-simple
@@ -66,8 +66,8 @@ executables:
 
 tests:
   explorer-test:
-    main:                Spec.hs
-    source-dirs:         test
+    main: Spec.hs
+    source-dirs: test
     dependencies:
     - explorer
     - hspec
