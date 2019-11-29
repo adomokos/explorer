@@ -22,7 +22,7 @@ run = do
   -- logInfo $ displayShow gitHubMetric
 
   ghMetric <- fetchPerson ghUsername
-    >>= findGHMetric ghUsername
+    >>= findGHMetric
 
   logInfo $ showEither ghMetric
 
@@ -33,9 +33,9 @@ run = do
     lift . logInfo $ "Number of ghMetrics: " <> displayShow ghMetricCount
 
  where
-  findGHMetric ghUsername =
+  findGHMetric =
     either (pure . Left)
-           (retrieveGitHubMetric ghUsername)
+           retrieveGitHubMetric
   fetchPerson = DB.runDb . DB.fetchPersonByGhUsername'
   insertGHMetric =
     either (\_ -> lift . logInfo $ "Not GitHubMetrics was found")
@@ -43,21 +43,21 @@ run = do
 
 retrieveGitHubMetric
   :: MonadUnliftIO m
-  => Text -> DP.Entity Person -> m (Either AppError GitHubMetric)
-retrieveGitHubMetric ghUsername person = do
-  res <- GP.fetchUserAndRepos ghUsername
+  => DP.Entity Person -> m (Either AppError GitHubMetric)
+retrieveGitHubMetric (DP.Entity personKey person) = do
+  res <- GP.fetchUserAndRepos $ T.pack $ personGitHubUsername person
 
   pure $ case res of
     Left _ghError -> Left $ GitHubQueryFailed "failed"
-    Right result -> (Right . uncurry (buildGitHubMetric person)) result
+    Right result -> (Right . uncurry (buildGitHubMetric personKey)) result
 
 buildGitHubMetric
-  :: DP.Entity Person
+  :: DP.Key Person
   -> User
   -> Vector GH.Repo
   -> GitHubMetric
-buildGitHubMetric person userInfo reposData =
-  GitHubMetric (DP.entityKey person)
+buildGitHubMetric personKey userInfo reposData =
+  GitHubMetric personKey
                (show $ userLogin userInfo)
                (T.unpack $ fromJust $ userName userInfo)
                (userPublicGists userInfo)
