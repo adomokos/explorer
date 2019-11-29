@@ -39,15 +39,8 @@ createPerson = insert $ Person "jsmith" "John" "Smith" "adomokos"
 fetchPersonByGhUsername
   :: (MonadIO m)
   => Text
-  -> SqlPersistT m (Maybe (Entity Person))
-fetchPersonByGhUsername gitHubUsername =
-  selectFirst [PersonGitHubUsername ==. T.unpack gitHubUsername] []
-
-fetchPersonByGhUsername'
-  :: (MonadIO m)
-  => Text
   -> SqlPersistT m (Either AppError (Entity Person))
-fetchPersonByGhUsername' gitHubUsername =
+fetchPersonByGhUsername gitHubUsername =
   toEither (UserNotFound gitHubUsername) <$>
     selectFirst [PersonGitHubUsername ==. T.unpack gitHubUsername] []
 
@@ -57,6 +50,13 @@ toEither appError = maybe (Left appError) Right
 createGitHubMetric :: (MonadIO m) => PersonId -> SqlPersistT m ()
 createGitHubMetric personId =
   insert_ $ GitHubMetric personId "jsmith" "John Smith" 34 79 100 9 Nothing dummyDate
+
+showGitHubMetricCount :: RIO App ()
+showGitHubMetricCount =
+  runDb $ do
+    ghMetricCount <- countGHMetrics
+
+    lift . logInfo $ "Number of ghMetrics: " <> displayShow ghMetricCount
 
 dummyDate :: DT.UTCTime
 dummyDate =

@@ -10,39 +10,27 @@ import qualified Database.Persist.Sqlite as DP
 import qualified Explorer.DB as DB
 import Explorer.Entities
 import qualified Explorer.GitHubProxy as GP
-import Explorer.Util (showEither)
+import Explorer.Util (showAndReturnEither)
 import GitHub (User(..))
 import qualified GitHub as GH
 import qualified RIO.Text as T
 
 run :: RIO App ()
-run = do
-  let ghUsername = "adomokos"
-
+run =
   fetchPerson ghUsername
     >>= findGHMetric
-    >>= showValue
+    >>= showAndReturnEither
     >>= insertGHMetric
-
-  showGitHubMetricCount
+    >> DB.showGitHubMetricCount
  where
-  showValue x = do
-    logInfo $ showEither x
-    pure x
+  ghUsername = "adomokos"
   findGHMetric =
     either (pure . Left)
            retrieveGitHubMetric
-  fetchPerson = DB.runDb . DB.fetchPersonByGhUsername'
+  fetchPerson = DB.runDb . DB.fetchPersonByGhUsername
   insertGHMetric =
       either (const $ logInfo "No GitHubMetrics was found")
              (DB.runDb . DP.insert_)
-
-showGitHubMetricCount :: RIO App ()
-showGitHubMetricCount =
-  DB.runDb $ do
-    ghMetricCount <- DB.countGHMetrics
-
-    lift . logInfo $ "Number of ghMetrics: " <> displayShow ghMetricCount
 
 retrieveGitHubMetric
   :: MonadUnliftIO m
