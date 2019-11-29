@@ -19,7 +19,7 @@ run =
   findGHMetric =
     either (pure . Left)
            GHS.retrieveGitHubMetric
-  fetchPerson = DB.runDb . DB.fetchPersonByGhUsername
+  fetchPerson = DB.runDB . DB.fetchPersonByGhUsername
   insertGHMetric =
       either (const $ logInfo "No GitHubMetrics was found")
-             (DB.runDb . DP.insert_)
+             (DB.runDB . DP.insert_)
