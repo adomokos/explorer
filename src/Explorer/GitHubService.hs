@@ -18,9 +18,10 @@ retrieveGitHubMetric
 retrieveGitHubMetric (DP.Entity personKey person) = do
   res <- GHP.fetchUserAndRepos $ T.pack $ personGitHubUsername person
 
-  pure $ case res of
-    Left _ghError -> Left $ GitHubQueryFailed "failed"
-    Right result -> (Right . uncurry (buildGitHubMetric personKey)) result
+  pure $
+    either (Left . GitHubQueryFailed . T.pack . show)
+           (Right . uncurry (buildGitHubMetric personKey))
+           res
 
 buildGitHubMetric
   :: DP.Key Person
