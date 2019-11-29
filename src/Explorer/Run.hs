@@ -19,27 +19,30 @@ run :: RIO App ()
 run = do
   let ghUsername = "adomokos"
 
-  -- logInfo $ displayShow gitHubMetric
-
-  ghMetric <- fetchPerson ghUsername
+  fetchPerson ghUsername
     >>= findGHMetric
+    >>= showValue
+    >>= insertGHMetric
 
-  logInfo $ showEither ghMetric
-
-  DB.runDb $ do
-    insertGHMetric ghMetric
-    ghMetricCount <- DB.countGHMetrics
-
-    lift . logInfo $ "Number of ghMetrics: " <> displayShow ghMetricCount
-
+  showGitHubMetricCount
  where
+  showValue x = do
+    logInfo $ showEither x
+    pure x
   findGHMetric =
     either (pure . Left)
            retrieveGitHubMetric
   fetchPerson = DB.runDb . DB.fetchPersonByGhUsername'
   insertGHMetric =
-    either (\_ -> lift . logInfo $ "Not GitHubMetrics was found")
-           DP.insert_
+      either (const $ logInfo "No GitHubMetrics was found")
+             (DB.runDb . DP.insert_)
+
+showGitHubMetricCount :: RIO App ()
+showGitHubMetricCount =
+  DB.runDb $ do
+    ghMetricCount <- DB.countGHMetrics
+
+    lift . logInfo $ "Number of ghMetrics: " <> displayShow ghMetricCount
 
 retrieveGitHubMetric
   :: MonadUnliftIO m
