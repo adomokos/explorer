@@ -7,6 +7,7 @@ import Data.Pool (Pool)
 import qualified Data.Time as DT
 import Database.Persist.Sqlite
 import Explorer.Entities
+import Explorer.Types (AppError(..))
 import RIO.Partial (fromJust)
 import qualified RIO.Text as T
 import System.Environment (lookupEnv)
@@ -42,6 +43,17 @@ fetchPersonByGhUsername
 fetchPersonByGhUsername gitHubUsername =
   selectFirst [PersonGitHubUsername ==. T.unpack gitHubUsername] []
 
+fetchPersonByGhUsername'
+  :: (MonadIO m)
+  => Text
+  -> SqlPersistT m (Either AppError (Entity Person))
+fetchPersonByGhUsername' gitHubUsername =
+  toEither (UserNotFound gitHubUsername) <$>
+    selectFirst [PersonGitHubUsername ==. T.unpack gitHubUsername] []
+
+toEither :: a -> Maybe b -> Either a b
+toEither appError = maybe (Left appError) Right
+
 createGitHubMetric :: (MonadIO m) => PersonId -> SqlPersistT m ()
 createGitHubMetric personId =
   insert_ $ GitHubMetric personId "jsmith" "John Smith" 34 79 100 9 Nothing dummyDate
@@ -53,7 +65,7 @@ dummyDate =
 connString :: IO T.Text
 connString = T.pack . fromJust <$> lookupEnv "DB_FILE_PATH"
 
-runDb :: SqlPersistT (RIO App) m -> RIO App m
+runDb :: (MonadUnliftIO a, MonadReader App a) => SqlPersistT a m -> a m
 runDb query = do
   connPool <- view $ to appConnPool
   runSqlPool query connPool

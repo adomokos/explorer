@@ -6,3 +6,4 @@ tarballs/
 db/explorer-db.sqlt
 db/explorer-db.sqlt-shm
 db/explorer-db.sqlt-wal
+tags

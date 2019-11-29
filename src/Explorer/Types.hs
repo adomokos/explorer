@@ -5,6 +5,11 @@ import qualified Database.Persist.Sqlite as DB
 import RIO
 import RIO.Process
 
+data AppError
+  = UserNotFound Text
+  | GitHubQueryFailed Text
+  deriving (Show, Eq)
+
 -- | Command line arguments
 newtype Options = Options
   { optionsVerbose :: Bool

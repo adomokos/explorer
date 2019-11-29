@@ -13,8 +13,8 @@ plus2 = (+ 2)
 
 showEither :: (Show a, Show b) => Either a b -> Utf8Builder
 showEither eValue = case eValue of
-  Left  err   -> "Error: " <> displayShow err
-  Right value -> displayShow value
+  Left  err   -> "Left: " <> displayShow err
+  Right value -> "Right: " <> displayShow value
 
 fetch2Data :: MonadUnliftIO m => m a -> m b -> m (a, b)
 fetch2Data action1 action2 =

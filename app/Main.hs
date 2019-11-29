@@ -8,7 +8,7 @@ import Explorer.Run (run)
 import LoadEnv (loadEnv)
 import Options.Applicative.Simple
 import qualified Paths_explorer
-import RIO.Process
+import RIO.Process (mkDefaultProcessContext)
 
 main :: IO ()
 main = do

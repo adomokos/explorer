@@ -1,5 +1,4 @@
-module Explorer.Run
-  where
+module Explorer.Run where
 
 import Explorer.Import
 
@@ -11,6 +10,7 @@ import qualified Database.Persist.Sqlite as DP
 import qualified Explorer.DB as DB
 import Explorer.Entities
 import qualified Explorer.GitHubProxy as GP
+import Explorer.Util (showEither)
 import GitHub (User(..))
 import qualified GitHub as GH
 import qualified RIO.Text as T
@@ -19,24 +19,37 @@ run :: RIO App ()
 run = do
   let ghUsername = "adomokos"
 
-  mPerson <- DB.runDb $ DB.fetchPersonByGhUsername ghUsername
-  let person = fromJust mPerson
-  -- logInfo $ displayShow person
-
-  res <- GP.fetchUserAndRepos ghUsername
-
-  -- We should use our own custom ADT error here
-  let (userInfo, reposData) = either (error "no gitHub Info") id res
-
-  let gitHubMetric = buildGitHubMetric person userInfo reposData
-
   -- logInfo $ displayShow gitHubMetric
 
+  ghMetric <- fetchPerson ghUsername
+    >>= findGHMetric ghUsername
+
+  logInfo $ showEither ghMetric
+
   DB.runDb $ do
-    DP.insert_ gitHubMetric
+    insertGHMetric ghMetric
     ghMetricCount <- DB.countGHMetrics
 
     lift . logInfo $ "Number of ghMetrics: " <> displayShow ghMetricCount
+
+ where
+  findGHMetric ghUsername =
+    either (pure . Left)
+           (retrieveGitHubMetric ghUsername)
+  fetchPerson = DB.runDb . DB.fetchPersonByGhUsername'
+  insertGHMetric =
+    either (\_ -> lift . logInfo $ "Not GitHubMetrics was found")
+           DP.insert_
+
+retrieveGitHubMetric
+  :: MonadUnliftIO m
+  => Text -> DP.Entity Person -> m (Either AppError GitHubMetric)
+retrieveGitHubMetric ghUsername person = do
+  res <- GP.fetchUserAndRepos ghUsername
+
+  pure $ case res of
+    Left _ghError -> Left $ GitHubQueryFailed "failed"
+    Right result -> (Right . uncurry (buildGitHubMetric person)) result
 
 buildGitHubMetric
   :: DP.Entity Person
@@ -44,7 +57,6 @@ buildGitHubMetric
   -> Vector GH.Repo
   -> GitHubMetric
 buildGitHubMetric person userInfo reposData =
-  -- let repos = DV.toList $ DV.map (\x -> (GH.repoName x, GH.repoStargazersCount x)) reposData
   GitHubMetric (DP.entityKey person)
                (show $ userLogin userInfo)
                (T.unpack $ fromJust $ userName userInfo)
@@ -56,4 +68,5 @@ buildGitHubMetric person userInfo reposData =
                (userCreatedAt userInfo)
  where
   mostStarGazedRepos =
-    take 3 . L.sortOn (Down . snd) . DV.toList . DV.map (\x -> (GH.repoName x, GH.repoStargazersCount x)) $ reposData
+    take 3 . L.sortOn (Down . snd) . DV.toList . DV.map
+      (\x -> (GH.repoName x, GH.repoStargazersCount x)) $ reposData
