@@ -9,7 +9,6 @@ module Explorer.Util
 where
 
 import RIO
--- import Explorer.Import
 
 showEither :: (Show a, Show b) => Either a b -> Utf8Builder
 showEither eValue = case eValue of
@@ -29,7 +28,7 @@ showAndReturnEither value  = do
   pure value
 
 toEither :: a -> Maybe b -> Either a b
-toEither appError = maybe (Left appError) Right
+toEither leftValue = maybe (Left leftValue) Right
 
 fetch2Data :: MonadUnliftIO m => m a -> m b -> m (a, b)
 fetch2Data action1 action2 =
