@@ -25,7 +25,7 @@ repl: ## Run a REPL for development
 .PHONY: repl
 
 repl-test: ## Run a REPL with tests
-	stack ghci :$(current_dir)-test
+	stack ghci $(current_dir):lib :$(current_dir)-test
 .PHONY: repl-test
 
 run: build ## Run app locally

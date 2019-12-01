@@ -44,7 +44,7 @@ fetch3Data action1 action2 action3 =
     <*> Concurrently action2
     <*> Concurrently action3
 
-applyFirst :: (Char -> Char) -> String -> String
+applyFirst :: (a -> a) -> [a] -> [a]
 -- This could work, ut it's not simple, it's too clever
 -- applyFirst f xs = (maybe [] (\x -> [f x]) $ listToMaybe xs) ++ drop 1 xs
 applyFirst _ [] = []

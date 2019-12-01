@@ -1,15 +1,20 @@
 module UtilSpec (spec) where
 
+import Data.Char (toLower)
 import Explorer.Import
+import Explorer.Util
 import Test.Hspec
 import Test.Hspec.QuickCheck
 
-plus2 :: Int -> Int
-plus2 = (+2)
-
 spec :: Spec
 spec =
-  describe "plus2" $ do
-    it "basic check" $ plus2 0 `shouldBe` 2
-    it "overflow" $ plus2 maxBound `shouldBe` minBound + 1
-    prop "minus 2" $ \i -> plus2 i - 2 `shouldBe` i
+  describe "Util" $
+    context "apply f on first element of a list" $ do
+      it "empty list returns empty" $
+        applyFirst (+2) ([] :: [Int]) `shouldBe` []
+
+      it "applies the function on the single item" $
+        applyFirst (+2) [1,2,3] `shouldBe` [3,2,3]
+
+      it "applies the function on first item in a list" $
+        applyFirst toLower "HelloWorld" `shouldBe` "helloWorld"
