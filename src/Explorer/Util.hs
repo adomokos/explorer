@@ -44,7 +44,7 @@ fetch3Data action1 action2 action3 =
     <*> Concurrently action3
 
 applyFirst :: (a -> a) -> [a] -> [a]
--- This could work, ut it's not simple, it's too clever
+-- This could work, but it's not simple, it's too clever
 -- applyFirst f xs = (maybe [] (\x -> [f x]) $ listToMaybe xs) ++ drop 1 xs
 applyFirst _ [] = []
 applyFirst f [x] = [f x]
