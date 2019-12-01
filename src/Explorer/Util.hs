@@ -1,5 +1,5 @@
 module Explorer.Util
-  ( plus2
+  ( applyFirst
   , showEither
   , showAndReturnEither
   , toEither
@@ -8,17 +8,22 @@ module Explorer.Util
   )
 where
 
-import Explorer.Import
-
-plus2 :: Int -> Int
-plus2 = (+ 2)
+import RIO
+-- import Explorer.Import
 
 showEither :: (Show a, Show b) => Either a b -> Utf8Builder
 showEither eValue = case eValue of
   Left  err   -> "Left: " <> displayShow err
   Right value -> "Right: " <> displayShow value
 
-showAndReturnEither :: (Show a, Show b) => Either a b -> RIO App (Either a b)
+showAndReturnEither ::
+  ( MonadIO m
+  , MonadReader env m
+  , HasLogFunc env
+  , Show a
+  , Show b)
+  => Either a b
+  -> m (Either a b)
 showAndReturnEither value  = do
   logInfo $ showEither value
   pure value
@@ -38,3 +43,8 @@ fetch3Data action1 action2 action3 =
     <$> Concurrently action1
     <*> Concurrently action2
     <*> Concurrently action3
+
+applyFirst :: (Char -> Char) -> String -> String
+applyFirst _ [] = []
+applyFirst f [x] = [f x]
+applyFirst f (x:xs) = f x : xs

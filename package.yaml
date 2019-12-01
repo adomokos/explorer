@@ -39,6 +39,7 @@ ghc-options:
 library:
   source-dirs: src
   dependencies:
+  - aeson
   - async
   - github
   - monad-logger

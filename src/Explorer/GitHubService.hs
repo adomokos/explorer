@@ -2,8 +2,10 @@ module Explorer.GitHubService where
 
 import Explorer.Import
 
+import Data.Aeson.Text (encodeToLazyText)
 import Data.List as L
 import Data.Maybe (fromJust)
+import Data.Text.Lazy (toStrict)
 import qualified Data.Vector as DV
 import qualified Database.Persist.Sqlite as DP
 import Explorer.Entities
@@ -36,9 +38,18 @@ buildGitHubMetric personKey userInfo reposData =
                (userPublicRepos userInfo)
                (userFollowers userInfo)
                (userFollowing userInfo)
-               (Just . T.pack . show $ mostStarGazedRepos)
+               (Just . toStrict . encodeToLazyText $ mostStarGazedRepos)
                (userCreatedAt userInfo)
  where
   mostStarGazedRepos =
-    take 3 . L.sortOn (Down . snd) . DV.toList . DV.map
-      (\x -> (GH.repoName x, GH.repoStargazersCount x)) $ reposData
+    map buildRepoMetric
+      . threeMostStargazed
+      . DV.toList
+      . DV.map extractField
+      $ reposData
+  buildRepoMetric (name, stargazerCount) =
+    RepoMetric (show name) stargazerCount
+  extractField repoInfo =
+    (GH.repoName repoInfo, GH.repoStargazersCount repoInfo)
+  threeMostStargazed :: [(GH.Name GH.Repo, Int)] -> [(GH.Name GH.Repo, Int)]
+  threeMostStargazed = take 3 . L.sortOn (Down . snd)
