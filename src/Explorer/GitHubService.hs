@@ -12,6 +12,7 @@ import Explorer.Entities
 import qualified Explorer.GitHubProxy as GHP
 import GitHub (User(..))
 import qualified GitHub as GH
+import GitHub.Data.Name (untagName)
 import qualified RIO.Text as T
 
 retrieveGitHubMetric
@@ -48,8 +49,8 @@ buildGitHubMetric personKey userInfo reposData =
       . DV.map extractField
       $ reposData
   buildRepoMetric (name, stargazerCount) =
-    RepoMetric (show name) stargazerCount
+    RepoMetric (T.unpack name) stargazerCount
   extractField repoInfo =
-    (GH.repoName repoInfo, GH.repoStargazersCount repoInfo)
-  threeMostStargazed :: [(GH.Name GH.Repo, Int)] -> [(GH.Name GH.Repo, Int)]
+    (untagName . GH.repoName $ repoInfo, GH.repoStargazersCount repoInfo)
+  threeMostStargazed :: [(Text, Int)] -> [(Text, Int)]
   threeMostStargazed = take 3 . L.sortOn (Down . snd)
