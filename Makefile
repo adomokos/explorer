@@ -33,6 +33,10 @@ run: build ## Run app locally
 	stack exec -- $(current_dir)-exe -v
 .PHONY: run
 
+create-tags: ## Creates tags for ctags = better navigation in Neovim
+	hasktags --ctags .
+.PHONY: create-tags
+
 help: ## Prints this help command
 	@grep -h -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) |\
 		sort | \
