@@ -3,17 +3,21 @@ module UtilSpec (spec) where
 import Data.Char (toLower)
 import Explorer.Import
 import Explorer.Util
+import System.IO (readFile)
 import Test.Hspec
 
 spec :: Spec
 spec =
   describe "Util" $ do
     context "applyFirst" $ do
-      it "empty list returns empty" $
+      it "empty list returns empty" $ do
+        json <- readFile "./resources/fixtures/user.json"
+        runSimpleApp . logInfo $ "Number of ghMetrics: " <> displayShow json
+
         applyFirst (+2) ([] :: [Int]) `shouldBe` []
 
       it "applies the function on the single item" $
-        applyFirst (+2) [1,2,3] `shouldBe` [3,2,3]
+        applyFirst (+2) ([1,2,3] :: [Int]) `shouldBe` [3,2,3]
 
       it "applies the function on first item in a list" $
         applyFirst toLower "HelloWorld" `shouldBe` "helloWorld"
