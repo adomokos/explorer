@@ -7,7 +7,6 @@ import Explorer.DB as DB
 import Explorer.Util (fetch2Data, fetch3Data, showEither)
 import GitHub (OwnerType(..), URL(..), User(..))
 import qualified GitHub as GH
-import qualified GitHub.Endpoints.Repos as GH
 import qualified GitHub.Endpoints.Users.PublicSSHKeys as PK
 
 -- | Run functions from this module
@@ -27,21 +26,22 @@ fetchPublicSSHKeys
   :: (MonadIO m)
   => GH.Name GH.Owner
   -> m (Either GH.Error (DV.Vector GH.PublicSSHKeyBasic))
-fetchPublicSSHKeys = liftIO . PK.publicSSHKeysFor'
+fetchPublicSSHKeys owner = liftIO $ GH.github' PK.publicSSHKeysForR owner GH.FetchAll
 
 fetchRepo
   :: (MonadIO m)
   => GH.Name GH.Owner
   -> GH.Name GH.Repo
   -> m (Either GH.Error GH.Repo)
-fetchRepo username repo = liftIO $ GH.repository username repo
+fetchRepo username repo = liftIO $ GH.github' GH.repositoryR username repo
 
 fetchUser :: (MonadIO m) => GH.Name GH.User -> m (Either GH.Error GH.User)
-fetchUser = liftIO . GH.executeRequest' . GH.userInfoForR
+fetchUser = liftIO . GH.github' . GH.userInfoForR
 
 fetchRepos
   :: (MonadIO m) => GH.Name GH.Owner -> m (Either GH.Error (Vector GH.Repo))
-fetchRepos username = liftIO $ GH.userRepos username GH.RepoPublicityOwner
+fetchRepos username = liftIO $
+  GH.github' GH.userReposR username GH.RepoPublicityOwner GH.FetchAll
 
 fetchUserAndRepos
   :: (MonadUnliftIO m)

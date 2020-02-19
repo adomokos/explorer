@@ -5,36 +5,29 @@
 
 packages:
 - completed:
-    hackage: github-0.22@sha256:13f09e904248a40dd173c08f2859d0dfda178a7c27f88df20b70a0d5a7614757,6909
+    hackage: github-0.25@sha256:32e1ede86a04976e06740a5993fab5306c5dbfdd17e96d83b79e53b82195739e,7091
     pantry-tree:
-      size: 7050
-      sha256: f290767f547b77ae323da3fb92a662c8a9e5fed1c23f626937e79ae983b84af0
+      size: 7412
+      sha256: 7cdaaf168051ed364ee9e2e565c63e2257755720fe5bfa287331e06581ea78f1
   original:
-    hackage: github-0.22@sha256:13f09e904248a40dd173c08f2859d0dfda178a7c27f88df20b70a0d5a7614757,6909
+    hackage: github-0.25
 - completed:
-    hackage: binary-instances-1@sha256:e7768b92f34bc40cc5cabecc5c143dee6ab4bcb5eb441d58e15a0b000d64940b,2591
+    hackage: binary-instances-1@sha256:b17565598b8df3241f9b46fa8e3a3368ecc8e3f2eb175d7c28f319042a6f5c79,2613
     pantry-tree:
       size: 1035
-      sha256: e0425d75675a23270bdf570faee30edb28d3f19ba45e166b4ce1725a7b778043
+      sha256: 938ffc6990cac12681c657f7afa93737eecf335e6f0212d8c0b7c1ea3e0f40f4
   original:
-    hackage: binary-instances-1@sha256:e7768b92f34bc40cc5cabecc5c143dee6ab4bcb5eb441d58e15a0b000d64940b,2591
+    hackage: binary-instances-1
 - completed:
-    hackage: binary-orphans-1.0.1@sha256:74d9a8e2c8c4dc8e11c9028ef103b930fc62f3943e45b1629f39114f2bfb5abb,1987
+    hackage: binary-orphans-1.0.1@sha256:1a3065d280912dd6312b20e0d41e9867069cdfde772f198299bc67d187996be8,2116
     pantry-tree:
       size: 285
-      sha256: e18cc1489df82d71535e1a15218142ad74199c11c91a5cac7dadf9ddb362fdc2
+      sha256: 28a195baa52b44a912ed4c1193b7074a4e7669612049298b799b05a3ec849506
   original:
-    hackage: binary-orphans-1.0.1@sha256:74d9a8e2c8c4dc8e11c9028ef103b930fc62f3943e45b1629f39114f2bfb5abb,1987
-- completed:
-    hackage: time-compat-1.9.2.2@sha256:9998dc1b77b5067572ab708e94750f1061152f342e92ad1aba38aae63581174d,4209
-    pantry-tree:
-      size: 3602
-      sha256: 724a63e80871bc6709a2d3ca1c3c7316048e99c9d50b0492f0eff25ce2cecbe0
-  original:
-    hackage: time-compat-1.9.2.2@sha256:9998dc1b77b5067572ab708e94750f1061152f342e92ad1aba38aae63581174d,4209
+    hackage: binary-orphans-1.0.1
 snapshots:
 - completed:
-    size: 524154
-    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/14/20.yaml
-    sha256: 2f5099f69ddb6abfe64400fe1e6a604e8e628f55e6837211cd70a81eb0a8fa4d
-  original: lts-14.20
+    size: 488576
+    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/15/0.yaml
+    sha256: e4b6a87b47ec1cf63a7f1a0884a3b276fce2b0d174a10e8753c4f618e7983568
+  original: lts-15.0
