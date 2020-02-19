@@ -12,7 +12,7 @@ spec =
     context "applyFirst" $ do
       it "empty list returns empty" $ do
         json <- readFile "./resources/fixtures/user.json"
-        runSimpleApp . logInfo $ "Number of ghMetrics: " <> displayShow json
+        -- runSimpleApp . logInfo $ "Number of ghMetrics: " <> displayShow json
 
         applyFirst (+2) ([] :: [Int]) `shouldBe` []
 
