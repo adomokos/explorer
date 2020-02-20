@@ -22,6 +22,8 @@ description:         Please see the README on Github at <https://github.com/adom
 dependencies:
 - base >= 4.7 && < 5
 - rio >= 0.1.8.0
+- load-env
+
 default-extensions:
 - FlexibleContexts
 - OverloadedStrings
@@ -58,7 +60,6 @@ executables:
     dependencies:
     - explorer
     - optparse-simple
-    - load-env
 
     ghc-options:
     - -threaded
