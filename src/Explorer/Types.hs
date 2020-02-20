@@ -7,7 +7,6 @@ import Data.Char (toLower)
 import Data.Text (pack, replace, unpack)
 import qualified Database.Persist.Sqlite as DB
 import Explorer.Util (applyFirst)
-import GHC.Generics (Generic)
 import RIO
 import RIO.Process
 

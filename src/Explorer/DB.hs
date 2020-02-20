@@ -7,7 +7,6 @@ import Data.Pool (Pool)
 import qualified Data.Time as DT
 import Database.Persist.Sqlite
 import Explorer.Entities
-import Explorer.Types (AppError(..))
 import Explorer.Util (toEither)
 import RIO.Partial (fromJust)
 import qualified RIO.Text as T
