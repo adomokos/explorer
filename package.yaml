@@ -4,7 +4,7 @@ github:              adomokos/explorer
 license:             BSD3
 author:              Author name here
 maintainer:          example@example.com
-copyright:           2019 Attila Domokos
+copyright:           2020 Attila Domokos
 
 extra-source-files:
 - README.md
