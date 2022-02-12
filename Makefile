@@ -1,6 +1,8 @@
 mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
 current_dir := $(notdir $(patsubst %/,%,$(dir $(mkfile_path))))
 
+GHC_VERSION ?= 8.10.7
+
 db.rebuild: ## Rebuilds the DBs
 	@echo 'Rebuilding the DB...'
 	@sh resources/rebuild-db.sh run
@@ -11,12 +13,17 @@ db.console: ## Open the db-console
 	sqlite3 db/explorer-db.sqlt
 .PHONY: db-console
 
+.PHONY: install
+install: ## Installs the necessary libraries
+	stack install --compiler ghc-$(GHC_VERSION) --system-ghc
+
 build: ## Build with Stack
-	stack build --fast
+	stack build --fast --compiler ghc-$(GHC_VERSION) --system-ghc
 .PHONY: build
 
 test: ## Run the tests
-	stack build --fast --test --test-arguments=--format=progress -j4
+	stack build --fast --test --test-arguments=--format=progress -j4 \
+		 --compiler ghc-$(GHC_VERSION) --system-ghc
 	# stack build --fast --test
 .PHONY: test
 
@@ -30,7 +37,8 @@ repl-test: ## Run a REPL with tests
 
 run: build ## Run app locally
 	# stack exec -- $(current_dir)-exe --help # optionally user flags as command line arguments
-	stack exec -- $(current_dir)-exe -v
+	stack exec -- $(current_dir)-exe \
+		 --compiler ghc-$(GHC_VERSION) --system-ghc
 .PHONY: run
 
 create-tags: ## Creates tags for ctags = better navigation in Neovim
