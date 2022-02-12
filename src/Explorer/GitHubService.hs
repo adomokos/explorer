@@ -3,7 +3,7 @@ module Explorer.GitHubService where
 import Explorer.Import
 
 import Data.Aeson.Text (encodeToLazyText)
-import Data.List as L
+import Data.List (sortOn)
 import Data.Maybe (fromJust)
 import Data.Text.Lazy (toStrict)
 import qualified Data.Vector as DV
@@ -53,4 +53,4 @@ buildGitHubMetric personKey userInfo reposData =
   extractField repoInfo =
     (untagName . GH.repoName $ repoInfo, GH.repoStargazersCount repoInfo)
   threeMostStargazed :: [(Text, Int)] -> [(Text, Int)]
-  threeMostStargazed = take 3 . L.sortOn (Down . snd)
+  threeMostStargazed = take 3 . sortOn (Down . snd)
