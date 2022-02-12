@@ -13,9 +13,9 @@ db.console: ## Open the db-console
 	sqlite3 db/explorer-db.sqlt
 .PHONY: db-console
 
-.PHONY: install
-install: ## Installs the necessary libraries
-	stack install --compiler ghc-$(GHC_VERSION) --system-ghc
+# .PHONY: install
+# install: ## Installs the necessary libraries
+# stack install --compiler ghc-$(GHC_VERSION) --system-ghc
 
 build: ## Build with Stack
 	stack build --fast --compiler ghc-$(GHC_VERSION) --system-ghc
